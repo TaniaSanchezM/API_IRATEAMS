@@ -286,6 +286,34 @@ app.get("/calendario", function(request, response)
     });
 });
 
+// MIS EVENTOS CREADOS
+app.get("/miscreados", function(request, response)
+{
+    let id = request.query.id;
+    let params =[id];
+
+    let sql =  "SELECT * FROM IRATEAMS.evento AS ev JOIN IRATEAMS.usuario AS us ON (ev.id_creador = us.id_usuario) WHERE us.id_usuario = ?"
+
+    connection.query(sql,params,function(err, result)
+    {
+        if(err){
+            console.error(err);
+            respuesta = {error:true,msg:"Error al conectar con la base de datos", resultado:err};
+            response.status(500).send(respuesta);
+        }
+        else{
+            if (result.length == 0) {
+                respuesta = {error:false,msg:"Error al obtener mis eventos creados", resultado:result}
+                response.status(404).send(respuesta);
+            } else {
+                respuesta = {error:false,msg:"Mis eventos creados", resultado:result}
+                response.status(200).send(respuesta);
+            }
+        }
+    });
+});
+
+
 
 // ENDPOINTS EVENTOS
 app.get("/eventos", function (request, response)
