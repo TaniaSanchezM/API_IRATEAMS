@@ -392,7 +392,7 @@ app.post("/guardados", function(request, response){
                 respuesta = {error:false,msg:"Error al obtener guardados", resultado:result}
                 response.status(404).send(respuesta);
             } else {
-                respuesta = {error:false,msg:"Historial guardados", resultado:result}
+                respuesta = {error:false,msg:"post guardados", resultado:result}
                 response.status(200).send(respuesta);
             }
         }
@@ -403,10 +403,10 @@ app.post("/guardados", function(request, response){
 
 
 app.delete("guardados", function(request,response)
-{
-    let id = request.body.id_evento
-    let params=[id]
-    let sql = "DELETE FROM IRATEAMS.guardados WHERE id_evento = ?"
+{    let id_usuario = request.body.id_usuario
+    let id_evento = request.body.id_evento
+    let params=[id_usuario,id_evento] 
+    let sql = "DELETE FROM IRATEAMS.guardados WHERE id_usuario=? AND id_evento=? "
     
     connection.query(sql,params,function(err, result)
     {
