@@ -408,32 +408,59 @@ app.post("/eventos", function(request, response)
     let respuesta;
     console.log(request.body)
 
-    let evento = { deporte: request.body.deporte,
-                    titulo: request.body.titulo,
-                    id_creador: request.body.id_creador,
-                    nPersSolicitadas: request.body.nPersSolicitadas,
-                    fecha: request.body.fecha,
-                    direccion: request.body.direccion,
-                    localidad: request.body.localidad,
-                    descripcion: request.body.descripcion,
-                    material: request.body.material,
-                    pago: request.body.pago,
-                    urlFotoEvento: request.body.urlFotoEvento
+    // let evento = { deporte: request.body.deporte,
+    //                 titulo: request.body.titulo,
+    //                 id_creador: request.body.id_creador,
+    //                 nPersSolicitadas: request.body.nPersSolicitadas,
+    //                 fecha: request.body.fecha,
+    //                 direccion: request.body.direccion,
+    //                 localidad: request.body.localidad,
+    //                 descripcion: request.body.descripcion,
+    //                 material: request.body.material,
+    //                 pago: request.body.pago,
+    //                 urlFotoEvento: request.body.urlFotoEvento
 
-    }
+    // }
 
+    // let sql = `INSERT INTO evento(deporte, titulo, id_creador, nPersSolicitadas, fecha, direccion, localidad, descripcion, material, pago, urlFotoEvento) 
+    //             VALUES(\"${request.body.deporte}\", \"${request.body.titulo}\", \"${request.body.id_creador}\", \"${request.body.nPersSolicitadas}\", \"${request.body.fecha}\", \"${request.body.direccion}\", \"${request.body.localidad}\", \"${request.body.descripcion}\", \"${request.body.material}\", \"${request.body.pago}\", \"${request.body.urlFotoEvento}\")`
 
+    let deporte= request.body.deporte;
+    let titulo= request.body.titulo;
+    let id_creador= request.body.id_creador;
+    let nPersSolicitadas= request.body.nPersSolicitadas;
+    let fecha= request.body.fecha;
+    let direccion= request.body.direccion;
+    let localidad= request.body.localidad;
+    let descripcion= request.body.descripcion;
+    let material= request.body.material;
+    let pago= request.body.pago;
+    let urlFotoEvento= request.body.urlFotoEvent;
 
+    let params = [
+        deporte,
+        titulo, 
+        id_creador,
+        nPersSolicitadas,
+        fecha,
+        direccion,
+        localidad,
+        descripcion,
+        material,
+        pago,
+        urlFotoEvento
+    ]
 
     let sql = `INSERT INTO evento(deporte, titulo, id_creador, nPersSolicitadas, fecha, direccion, localidad, descripcion, material, pago, urlFotoEvento) 
-                VALUES(\"${request.body.deporte}\", \"${request.body.titulo}\", \"${request.body.id_creador}\", \"${request.body.nPersSolicitadas}\", \"${request.body.fecha}\", \"${request.body.direccion}\", \"${request.body.localidad}\", \"${request.body.descripcion}\", \"${request.body.material}\", \"${request.body.pago}\", \"${request.body.urlFotoEvento}\")`
-
-    connection.query(sql, function(err,result)
+                VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    
+    connection.query(sql, params, function(err,result)
     {
         if(err)
         {
-            console.log("error post evento");
-            console.log(err)
+            console.error(err);
+            respuesta = {error:true,msg:"Error al conectar con la base de datos", resultado:err};
+            response.status(500).send(respuesta);
         }
         else{
             console.log(result)
@@ -490,8 +517,9 @@ app.put("/eventos", function(request, response)
 
         if(err)
         {
-            console.log("Error put evento");
-            console.log(err)
+            console.error(err);
+            respuesta = {error:true,msg:"Error al conectar con la base de datos", resultado:err};
+            response.status(500).send(respuesta);
         }
         else{
                 
@@ -520,15 +548,16 @@ app.delete("/eventos", function(request, response)
     connection.query(sql2, function(err,result){
 
         if(err){
-                console.log(err)
+            console.error(err);
+            respuesta = {error:true,msg:"Error al conectar con la base de datos", resultado:err};
+            response.status(500).send(respuesta);
         }
         else{
-                console.log("Evento eliminado")
-                console.log(result)
-                respuesta = {error:false, msg:"Evento eliminado", resultado:evento}
-                response.status(500).send(respuesta);
+            console.log("Evento eliminado")
+            console.log(result)
+            respuesta = {error:false, msg:"Evento eliminado", resultado:evento}
+            response.status(500).send(respuesta);
                
-                
         }
     })
     console.log("funcionando")
@@ -654,8 +683,9 @@ app.post("/apuntados", function(request, response)
     {
         if(err)
         {
-            console.log("error post apuntados");
-            console.log(err)
+            console.error(err);
+            respuesta = {error:true,msg:"Error al conectar con la base de datos", resultado:err};
+            response.status(500).send(respuesta);
         }
         else{
             console.log(result)
@@ -684,7 +714,9 @@ app.delete("/apuntados", function(request, response)
     connection.query(sql2, function(err,result){
 
         if(err){
-                console.log(err)
+            console.error(err);
+            respuesta = {error:true,msg:"Error al conectar con la base de datos", resultado:err};
+            response.status(500).send(respuesta);
         }
         else{
                 console.log("Apuntado eliminado")
