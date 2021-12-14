@@ -312,7 +312,30 @@ app.get("/miscreados", function(request, response)
         }
     });
 });
-
+app.delete("/miscreados", function(request,response)
+{
+    let id = request.body.id_evento
+    let params=[id]
+    let sql = "DELETE FROM IRATEAMS.evento WHERE id_evento = ?"
+    
+    connection.query(sql,params,function(err, result)
+    {
+        if(err){
+            console.error(err);
+            respuesta = {error:true,msg:"Error al conectar con la base de datos", resultado:err};
+            response.status(500).send(respuesta);
+        }
+        else{
+            if (result.length == 0) {
+                respuesta = {error:false,msg:"Error al eliminar el evento", resultado:result}
+                response.status(404).send(respuesta);
+            } else {
+                respuesta = {error:false,msg:"Evento eliminado", resultado:result}
+                response.status(200).send(respuesta);
+            }
+        }
+    });
+});
 
 
 // ENDPOINTS EVENTOS
