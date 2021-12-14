@@ -39,7 +39,7 @@ app.post('/login', (req, res) => {
     const encryptpassword   = Encrypt(req.body.password);
     const password          = req.body.password;
     const params            = [user,user,password,encryptpassword]
-    const query             = `SELECT id_usuario from usuario WHERE (username = ? || mail = ?) and (password = ? or password = ?)`;
+    const query             = `SELECT id_evento from usuario WHERE (username = ? || mail = ?) and (password = ? or password = ?)`;
     let response;
     connection.query(query,params,(err, results) =>{
         if(err){
@@ -53,7 +53,7 @@ app.post('/login', (req, res) => {
             return;
         }
         if (results.length > 0) { 
-            const token = generateAccessToken(results[0].id_usuario);
+            const token = generateAccessToken(results[0].id_evento);
             response    = {
                 error:false,
                 msg:"Inicio de sesión completado", 
@@ -113,7 +113,7 @@ app.get("/usuarios", function(request, response)
         sql = "SELECT * FROM IRATEAMS.usuario"
     }
     else {
-        sql = "SELECT * FROM IRATEAMS.usuario WHERE id_usuario=?" 
+        sql = "SELECT * FROM IRATEAMS.usuario WHERE id_evento=?" 
     }
 
     connection.query(sql, params, function(err, result)
@@ -179,11 +179,11 @@ app.put("/usuarios", function(request, response)
     let username = request.body.username;
     let mail = request.body.mail
 
-    let id = request.body.id_usuario
+    let id = request.body.id_evento
 
     let params=[username,mail, password, nombreCompleto, fechaNacimiento, telefono, urlFoto, id]
 
-    let sql = "UPDATE IRATEAMS.usuario SET username = ?, mail = ?, password = ?, nombreCompleto = ?, fechaNacimiento = ?,  telefono = ?, urlFoto = ? WHERE id_usuario= ?";
+    let sql = "UPDATE IRATEAMS.usuario SET username = ?, mail = ?, password = ?, nombreCompleto = ?, fechaNacimiento = ?,  telefono = ?, urlFoto = ? WHERE id_evento= ?";
     
     connection.query(sql, params, function(err, result)
     {
@@ -208,9 +208,9 @@ app.put("/usuarios", function(request, response)
 // Por ahora no hay funcionalidad de eliminar
 app.delete("/usuarios", function(request,response)
 {
-    let id = request.body.id_usuario
+    let id = request.body.id_evento
     let params=[id]
-    let sql = "DELETE FROM IRATEAMS.usuario WHERE id_usuario = ?"
+    let sql = "DELETE FROM IRATEAMS.usuario WHERE id_evento = ?"
     
     connection.query(sql,params,function(err, result)
     {
@@ -237,7 +237,7 @@ app.get("/historial", function(request, response)
     let id = request.query.id;
     let params =[id];
 
-    let sql = "SELECT ev.id_evento, titulo, fecha, direccion, localidad FROM IRATEAMS.evento AS ev JOIN apuntados AS ap ON (ev.id_evento = ap.id_evento) JOIN usuario AS us ON (ap.id_usuario = us.id_usuario) WHERE us.id_usuario = ? AND  fecha < CURDATE();" 
+    let sql = "SELECT ev.id_evento, titulo, fecha, direccion, localidad FROM IRATEAMS.evento AS ev JOIN apuntados AS ap ON (ev.id_evento = ap.id_evento) JOIN usuario AS us ON (ap.id_evento = us.id_evento) WHERE us.id_evento = ? AND  fecha < CURDATE();" 
 
     connection.query(sql,params,function(err, result)
     {
@@ -265,7 +265,7 @@ app.get("/calendario", function(request, response)
     let id = request.query.id;
     let params =[id];
 
-    let sql = "SELECT ev.id_evento, titulo, fecha, direccion, localidad FROM IRATEAMS.evento AS ev JOIN apuntados AS ap ON (ev.id_evento = ap.id_evento) JOIN usuario AS us ON (ap.id_usuario = us.id_usuario) WHERE us.id_usuario = ? AND  fecha >= CURDATE();" 
+    let sql = "SELECT ev.id_evento, titulo, fecha, direccion, localidad FROM IRATEAMS.evento AS ev JOIN apuntados AS ap ON (ev.id_evento = ap.id_evento) JOIN usuario AS us ON (ap.id_evento = us.id_evento) WHERE us.id_evento = ? AND  fecha >= CURDATE();" 
 
     connection.query(sql,params,function(err, result)
     {
@@ -292,7 +292,7 @@ app.get("/miscreados", function(request, response)
     let id = request.query.id;
     let params =[id];
 
-    let sql =  "SELECT * FROM IRATEAMS.evento AS ev JOIN IRATEAMS.usuario AS us ON (ev.id_creador = us.id_usuario) WHERE us.id_usuario = ?"
+    let sql =  "SELECT * FROM IRATEAMS.evento AS ev JOIN IRATEAMS.usuario AS us ON (ev.id_creador = us.id_evento) WHERE us.id_evento = ?"
 
     connection.query(sql,params,function(err, result)
     {
@@ -338,6 +338,96 @@ app.delete("/miscreados", function(request,response)
 });
 
 
+
+// EVENTOS GUARDADOS
+app.get("/guardados", function(request, response){
+  console.log("entrada evento guardado")
+  let id_usuario = request.query.id_usuario;
+  let params = [id_usuario]
+  let sql;
+  let respuesta;
+
+      console.log("get eventos guardados");
+      sql = "SELECT * FROM IRATEAMS.guardados WHERE id_usuario = ?"
+  
+      connection.query(sql,params,function(err, result)
+      {
+          if(err){
+              console.error(err);
+              respuesta = {error:true,msg:"Error get guardados", resultado:err};
+              response.status(500).send(respuesta);
+          }
+          else{
+              if (result.length == 0) {
+                  respuesta = {error:false,msg:"Error al obtener guardados", resultado:result}
+                  response.status(404).send(respuesta);
+              } else {
+                  respuesta = {error:false,msg:"guardados obtenido", resultado:result}
+                  response.status(200).send(respuesta);
+              }
+          }
+      });
+})
+
+app.post("/guardados", function(request, response){
+    let id_usuario = request.body.id_usuario;
+    let id_evento = request.body.id_evento;
+    let params = [id_usuario, id_evento]
+    let sql;
+    let respuesta;
+
+  
+    console.log("post evento guardado");
+    sql = "INSERT INTO IRATEAMS.guardados (id_usuario, id_evento) VALUES (?,?)"
+    
+    connection.query(sql,params,function(err, result)
+    {
+        if(err){
+            console.error(err);
+            respuesta = {error:true,msg:"Error post guardados", resultado:err};
+            response.status(500).send(respuesta);
+        }
+        else{
+            if (result.length == 0) {
+                respuesta = {error:false,msg:"Error al obtener guardados", resultado:result}
+                response.status(404).send(respuesta);
+            } else {
+                respuesta = {error:false,msg:"Historial guardados", resultado:result}
+                response.status(200).send(respuesta);
+            }
+        }
+    });
+}) 
+
+
+
+
+app.delete("guardados", function(request,response)
+{
+    let id = request.body.id_evento
+    let params=[id]
+    let sql = "DELETE FROM IRATEAMS.guardados WHERE id_evento = ?"
+    
+    connection.query(sql,params,function(err, result)
+    {
+        if(err){
+            console.error(err);
+            respuesta = {error:true,msg:"Error al conectar con la base de datos", resultado:err};
+            response.status(500).send(respuesta);
+        }
+        else{
+            if (result.length == 0) {
+                respuesta = {error:false,msg:"Error al eliminar evento guardado", resultado:result}
+                response.status(404).send(respuesta);
+            } else {
+                respuesta = {error:false,msg:"evento guardado eliminado", resultado:result}
+                response.status(200).send(respuesta);
+            }
+        }
+    });
+});
+
+
 // ENDPOINTS EVENTOS
 app.get("/eventos", function (request, response)
 {
@@ -351,13 +441,13 @@ app.get("/eventos", function (request, response)
     if(id == null)
     {
         console.log("get eventos");
-        sql = "SELECT * FROM IRATEAMS.evento JOIN IRATEAMS.usuario ON (evento.id_creador = usuario.id_usuario) ORDER BY DATE_FORMAT(fecha, '%d-%m-%Y %T') ASC;"
+        sql = "SELECT * FROM IRATEAMS.evento JOIN IRATEAMS.usuario ON (evento.id_creador = usuario.id_evento) ORDER BY DATE_FORMAT(fecha, '%d-%m-%Y %T') ASC;"
         
     }else
     {
         console.log("get evento");
         url = "/eventos?id="+request.query.id
-        sql = "SELECT * FROM IRATEAMS.evento JOIN IRATEAMS.usuario ON (evento.id_creador = usuario.id_usuario) WHERE id_evento ="+id
+        sql = "SELECT * FROM IRATEAMS.evento JOIN IRATEAMS.usuario ON (evento.id_creador = usuario.id_evento) WHERE id_evento ="+id
     }
 
     connection.query(sql, function(err, result)
@@ -667,13 +757,13 @@ app.post("/apuntados", function(request, response)
     let respuesta;
     console.log(request.body)
 
-    let evento = { id_usuario: request.body.id_usuario,
+    let evento = { id_evento: request.body.id_evento,
                     id_evento: request.body.id_evento,
     }
 
 
-    let sql = `INSERT INTO IRATEAMS.apuntados(id_usuario, id_evento) 
-                VALUES(${request.body.id_usuario}, ${request.body.id_evento})`
+    let sql = `INSERT INTO IRATEAMS.apuntados(id_evento, id_evento) 
+                VALUES(${request.body.id_evento}, ${request.body.id_evento})`
 
 
     // let sql = `INSERT INTO evento( localidad, descripcion, material, pago ) 
@@ -704,12 +794,12 @@ app.delete("/apuntados", function(request, response)
 {
     
 
-    // let id_usuario = request.body.id_usuario;
+    // let id_evento = request.body.id_evento;
     // let id_evento = request.body.id_evento;
 
     let respuesta;
 
-    let sql2 = `DELETE FROM IRATEAMS.apuntados WHERE id_evento= ${request.body.id_evento} AND id_usuario=  ${request.body.id_usuario}`
+    let sql2 = `DELETE FROM IRATEAMS.apuntados WHERE id_evento= ${request.body.id_evento} AND id_evento=  ${request.body.id_evento}`
 
     connection.query(sql2, function(err,result){
 
@@ -740,8 +830,8 @@ app.get("/chats",
     function (request, response) {
         url = "/chats?id=" + request.query.id;
         sql = `SELECT id_chat, username, nombreCompleto, urlFoto
-        FROM chat INNER JOIN usuario ON chat.id_user1 = usuario.id_usuario OR chat.id_user2 =usuario.id_usuario
-        WHERE id_usuario NOT LIKE ${request.query.id} 
+        FROM chat INNER JOIN usuario ON chat.id_user1 = usuario.id_evento OR chat.id_user2 =usuario.id_evento
+        WHERE id_evento NOT LIKE ${request.query.id} 
         AND (id_user1 = ${request.query.id} OR id_user2 = ${request.query.id})`;
         
 
