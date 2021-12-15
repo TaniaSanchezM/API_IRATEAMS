@@ -433,13 +433,13 @@ app.get("/eventos", function (request, response)
     if(id == null)
     {
         console.log("get eventos");
-        sql = "SELECT * FROM IRATEAMS.evento JOIN IRATEAMS.usuario ON (evento.id_creador = usuario.id_usuario) WHERE fecha >= CURDATE() ORDER BY DATE_FORMAT(fecha, '%d-%m-%Y %T') ASC"
+        sql = "SELECT * FROM IRATEAMS.evento WHERE fecha >= CURDATE() ORDER BY DATE_FORMAT(fecha, '%d-%m-%Y %T') ASC"
         
     }else
     {
         console.log("get evento");
         url = "/eventos?id="+request.query.id
-        sql = "SELECT * FROM IRATEAMS.evento JOIN IRATEAMS.usuario ON (evento.id_creador = usuario.id_usuario) WHERE id_evento ="+id
+        sql = "SELECT * FROM IRATEAMS.evento  WHERE id_evento ="+id
     }
 
     connection.query(sql, function(err, result)
@@ -703,8 +703,51 @@ app.get("/filtroHome", function(request, response)
     
 })
 
-
-
+// HOME
+app.get("/home", function(request, response){
+    let id_usuario = request.query.id_usuario;
+    let params = [id_usuario]
+    let sql = "SELECT * FROM IRATEAMS.evento WHERE fecha >= CURDATE() ORDER BY DATE_FORMAT(fecha, '%d-%m-%Y %T') ASC"
+    connection.query(sql,params,function(err, result1)
+        {
+            if(err){
+                console.error(err);
+                respuesta = {error:true,msg:"Error al conectar con la base de datos", resultado:err};
+                response.status(500).send(respuesta);
+            }
+            else{
+                if (result1.length == 0) {
+                    respuesta = {error:false,msg:"No hay eventos", resultado1:result1}
+                    response.status(404).send(respuesta);
+                } else {
+                    let sql2 = "SELECT * FROM IRATEAMS.guardados WHERE id_usuario = ?"
+                    connection.query(sql2,params,function(err, result2)
+                    {
+                        if(err){
+                            console.error(err);
+                            respuesta = {error:true,msg:"Error get guardados", resultado:err};
+                            response.status(500).send(respuesta);
+                        }
+                        else{
+                            if (result2.length == 0) {
+                                respuesta = {error:false,msg:"No hay eventos guardados", resultado:result1}
+                                response.status(404).send(respuesta);
+                            } else {
+                                result1.forEach((element1) =>
+                                {
+                                    let value = result2.some((element2) => element1.id_evento == element2.id_evento )
+                                    if (value)
+                                        element1.guardado = value
+                                })
+                                respuesta = {error:false,msg:"guardados obtenido", resultado:result1}
+                                response.status(200).send(result1);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+  })
 
 // ENDPOINTS APUNTADOS
 
