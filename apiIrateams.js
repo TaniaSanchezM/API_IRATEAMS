@@ -314,6 +314,7 @@ app.get("/miscreados", function(request, response)
 });
 app.delete("/miscreados", function(request,response)
 {
+    console.log(request.body)
     let id = request.body.id_evento
     let params=[id]
     let sql = "DELETE FROM IRATEAMS.evento WHERE id_evento = ?"
@@ -337,6 +338,83 @@ app.delete("/miscreados", function(request,response)
     });
 });
 
+// EVENTOS GUARDADOS
+app.get("/guardados", function(request, response){
+    console.log("entrada evento guardado")
+    let id_usuario = request.query.id_usuario;
+    let params = [id_usuario]
+    let sql;
+    let respuesta;
+        console.log("get eventos guardados");
+        sql = "SELECT * FROM IRATEAMS.guardados WHERE id_usuario = ?"
+        connection.query(sql,params,function(err, result)
+        {
+            if(err){
+                console.error(err);
+                respuesta = {error:true,msg:"Error get guardados", resultado:err};
+                response.status(500).send(respuesta);
+            }
+            else{
+                if (result.length == 0) {
+                    respuesta = {error:false,msg:"Error al obtener guardados", resultado:result}
+                    response.status(404).send(respuesta);
+                } else {
+                    respuesta = {error:false,msg:"guardados obtenido", resultado:result}
+                    response.status(200).send(respuesta);
+                }
+            }
+        });
+  })
+  app.post("/guardados", function(request, response){
+      let id_usuario = request.body.id_usuario;
+      let id_evento = request.body.id_evento;
+      let params = [id_usuario, id_evento]
+      let sql;
+      let respuesta;
+      console.log("post evento guardado");
+      sql = "INSERT INTO IRATEAMS.guardados (id_usuario, id_evento) VALUES (?,?)"
+      connection.query(sql,params,function(err, result)
+      {
+          if(err){
+              console.error(err);
+              respuesta = {error:true,msg:"Error post guardados", resultado:err};
+              response.status(500).send(respuesta);
+          }
+          else{
+              if (result.length == 0) {
+                  respuesta = {error:false,msg:"Error al obtener guardados", resultado:result}
+                  response.status(404).send(respuesta);
+              } else {
+                  respuesta = {error:false,msg:"post guardados", resultado:result}
+                  response.status(200).send(respuesta);
+              }
+          }
+      });
+  })
+  app.delete("guardados", function(request,response)
+  {    let id_usuario = request.body.id_usuario
+      let id_evento = request.body.id_evento
+      let params=[id_usuario,id_evento]
+      let sql = "DELETE FROM IRATEAMS.guardados WHERE id_usuario=? AND id_evento=? "
+      connection.query(sql,params,function(err, result)
+      {
+          if(err){
+              console.error(err);
+              respuesta = {error:true,msg:"Error al conectar con la base de datos", resultado:err};
+              response.status(500).send(respuesta);
+          }
+          else{
+              if (result.length == 0) {
+                  respuesta = {error:false,msg:"Error al eliminar evento guardado", resultado:result}
+                  response.status(404).send(respuesta);
+              } else {
+                  respuesta = {error:false,msg:"evento guardado eliminado", resultado:result}
+                  response.status(200).send(respuesta);
+              }
+          }
+      });
+  });
+
 
 // ENDPOINTS EVENTOS
 app.get("/eventos", function (request, response)
@@ -351,7 +429,7 @@ app.get("/eventos", function (request, response)
     if(id == null)
     {
         console.log("get eventos");
-        sql = "SELECT * FROM IRATEAMS.evento JOIN IRATEAMS.usuario ON (evento.id_creador = usuario.id_usuario) ORDER BY DATE_FORMAT(fecha, '%d-%m-%Y %T') ASC;"
+        sql = "SELECT * FROM IRATEAMS.evento JOIN IRATEAMS.usuario ON (evento.id_creador = usuario.id_usuario) WHERE fecha >= CURDATE() ORDER BY DATE_FORMAT(fecha, '%d-%m-%Y %T') ASC"
         
     }else
     {
