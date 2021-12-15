@@ -53,7 +53,7 @@ app.post('/login', (req, res) => {
             return;
         }
         if (results.length > 0) { 
-            const token = generateAccessToken(results[0].id_usuario);
+            const token = generateAccessToken(results[0].id_evento);
             response    = {
                 error:false,
                 msg:"Inicio de sesión completado", 
@@ -179,7 +179,7 @@ app.put("/usuarios", function(request, response)
     let username = request.body.username;
     let mail = request.body.mail
 
-    let id = request.body.id_usuario
+    let id = request.body.id_evento
 
     let params=[username,mail, password, nombreCompleto, fechaNacimiento, telefono, urlFoto, id]
 
@@ -208,7 +208,7 @@ app.put("/usuarios", function(request, response)
 // Por ahora no hay funcionalidad de eliminar
 app.delete("/usuarios", function(request,response)
 {
-    let id = request.body.id_usuario
+    let id = request.body.id_evento
     let params=[id]
     let sql = "DELETE FROM IRATEAMS.usuario WHERE id_usuario = ?"
     
@@ -782,12 +782,12 @@ app.delete("/apuntados", function(request, response)
 {
     
 
-    // let id_usuario = request.body.id_usuario;
+    // let id_evento = request.body.id_evento;
     // let id_evento = request.body.id_evento;
 
     let respuesta;
 
-    let sql2 = `DELETE FROM IRATEAMS.apuntados WHERE id_evento= ${request.body.id_evento} AND id_usuario=  ${request.body.id_usuario}`
+    let sql2 = `DELETE FROM IRATEAMS.apuntados WHERE id_evento= ${request.body.id_evento} AND id_usuario =  ${request.body.id_usuario}`
 
     connection.query(sql2, function(err,result){
 
