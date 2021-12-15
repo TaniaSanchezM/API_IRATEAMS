@@ -67,7 +67,7 @@ app.post('/login', (req, res) => {
                 msg:"El usuario o la contraseña no son correctos", 
                 resultado:results
             }
-            res.status(404).send(response);
+            res.status(204).send(response);
         }
           
     });
@@ -126,7 +126,7 @@ app.get("/usuarios", function(request, response)
         else{
             if (result.length == 0) {
                 respuesta = {error:false,msg:"Error al obtener usuario", resultado:result}
-                response.status(404).send(respuesta);
+                response.status(204).send(respuesta);
             } else {
                 respuesta = {error:false,msg:"Usuario", resultado:result}
                 response.status(200).send(respuesta);
@@ -158,7 +158,7 @@ app.post("/usuarios", function(request, response)
         else{
             if (result.length == 0) {
                 respuesta = {error:false,msg:"Error al crear el usuario", resultado:result}
-                response.status(404).send(respuesta);
+                response.status(204).send(respuesta);
             } else {
                 respuesta = {error:false,msg:"Usuario creado", resultado:result}
                 response.status(200).send(respuesta);
@@ -198,7 +198,7 @@ app.put("/usuarios", function(request, response)
         else{
             if (result.length == 0) {
                 respuesta = {error:false,msg:"Error al modificar los datos de usuario", resultado:result}
-                response.status(404).send(respuesta);
+                response.status(204).send(respuesta);
             } else {
                 respuesta = {error:false,msg:"Datos modificados", resultado:result}
                 response.status(200).send(respuesta);
@@ -225,7 +225,7 @@ app.delete("/usuarios", function(request,response)
         else{
             if (result.length == 0) {
                 respuesta = {error:false,msg:"Error al eliminar el usuario", resultado:result}
-                response.status(404).send(respuesta);
+                response.status(204).send(respuesta);
             } else {
                 respuesta = {error:false,msg:"Usuario eliminado", resultado:result}
                 response.status(200).send(respuesta);
@@ -252,7 +252,7 @@ app.get("/historial", function(request, response)
         else{
             if (result.length == 0) {
                 respuesta = {error:false,msg:"Error al obtener el historial", resultado:result}
-                response.status(404).send(respuesta);
+                response.status(204).send(respuesta);
             } else {
                 respuesta = {error:false,msg:"Historial obtenido", resultado:result}
                 response.status(200).send(respuesta);
@@ -280,7 +280,7 @@ app.get("/calendario", function(request, response)
         else{
             if (result.length == 0) {
                 respuesta = {error:false,msg:"Error al obtener p´roximos eventos", resultado:result}
-                response.status(404).send(respuesta);
+                response.status(204).send(respuesta);
             } else {
                 respuesta = {error:false,msg:"Próximos eventos", resultado:result}
                 response.status(200).send(respuesta);
@@ -307,7 +307,7 @@ app.get("/miscreados", function(request, response)
         else{
             if (result.length == 0) {
                 respuesta = {error:false,msg:"Error al obtener mis eventos creados", resultado:result}
-                response.status(404).send(respuesta);
+                response.status(204).send(respuesta);
             } else {
                 respuesta = {error:false,msg:"Mis eventos creados", resultado:result}
                 response.status(200).send(respuesta);
@@ -331,7 +331,7 @@ app.delete("/miscreados", function(request,response)
         else{
             if (result.length == 0) {
                 respuesta = {error:false,msg:"Error al eliminar el evento", resultado:result}
-                response.status(404).send(respuesta);
+                response.status(204).send(respuesta);
             } else {
                 respuesta = {error:false,msg:"Evento eliminado", resultado:result}
                 response.status(200).send(respuesta);
@@ -395,7 +395,7 @@ app.get("/eventos", function (request, response)
 //         else{
 //             if (results.length == 0) {
 //                 respuesta = {error:false,msg:"No se han encontrado eventos", resultado:results}
-//                 response.status(404).send(respuesta);
+//                 response.status(204).send(respuesta);
 //             } else {
 //                 respuesta = {error:false, msg:"Se han encontrado eventos", resultado:results}
 //                 response.status(200).send(respuesta);
@@ -614,7 +614,7 @@ app.get("/filtroHome", function(request, response)
         else{
             if (result.length === 0) {
                 respuesta = {error:false,msg:"Error al obtener datos del filtro", resultado:result}
-                response.status(404).send(respuesta);
+                response.status(204).send(respuesta);
             } else {
                 respuesta = {error:false,msg:"filtro realizado", resultado:result}
                 response.status(200).send(respuesta);
@@ -652,7 +652,7 @@ app.get("/apuntados", function(request, response)
         else{
             if (result.length == 0) {
                 respuesta = {error:false,msg:"Error al obtener apuntados", resultado:result}
-                response.status(404).send(respuesta);
+                response.status(204).send(respuesta);
             } else {
                 respuesta = {error:false,msg:" get Apuntado/s", resultado:result}
                 response.status(200).send(respuesta);
