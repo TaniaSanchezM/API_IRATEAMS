@@ -391,8 +391,9 @@ app.get("/guardados", function(request, response){
           }
       });
   })
-  app.delete("guardados", function(request,response)
-  {    let id_usuario = request.body.id_usuario
+  app.delete("/guardados", function(request,response)
+  {    
+      let id_usuario = request.body.id_usuario
       let id_evento = request.body.id_evento
       let params=[id_usuario,id_evento]
       let sql = "DELETE FROM IRATEAMS.guardados WHERE id_usuario=? AND id_evento=? "
