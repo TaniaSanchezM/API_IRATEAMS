@@ -1,11 +1,11 @@
-const express = require("express");
-const app = express();
-const cors = require('cors');
-const mysql = require('mysql2');
-const crypto     = require('crypto');
-const jwt        = require('jsonwebtoken');
+const express   = require("express");
+const app       = express();
+const cors      = require('cors');
+const mysql     = require('mysql2');
+const crypto    = require('crypto');
+const jwt       = require('jsonwebtoken');
 
-let port = process.env.PORT || 3000;
+let port        = process.env.PORT || 3000;
 
 
 const connection = mysql.createConnection(
@@ -141,8 +141,9 @@ app.post("/usuarios", function(request, response)
     let username =request.body.username;
     let mail =request.body.mail;
     let password= request.body.password;
+    let encryptpassword   = Encrypt(password);
 
-    let params=[username, mail, password]
+    let params=[username, mail, encryptpassword]
 
     console.log(request.body);
     let sql= "INSERT INTO IRATEAMS.usuario (username, mail, password) VALUES (?,?,?)"
@@ -178,10 +179,12 @@ app.put("/usuarios", function(request, response)
     let urlFoto= request.body.urlFoto;
     let username = request.body.username;
     let mail = request.body.mail
+    let encryptpassword   = Encrypt(password);
+    
 
     let id = request.body.id_usuario
 
-    let params=[username,mail, password, nombreCompleto, fechaNacimiento, telefono, urlFoto, id]
+    let params=[username,mail, encryptpassword, nombreCompleto, fechaNacimiento, telefono, urlFoto, id]
 
     let sql = "UPDATE IRATEAMS.usuario SET username = ?, mail = ?, password = ?, nombreCompleto = ?, fechaNacimiento = ?,  telefono = ?, urlFoto = ? WHERE id_usuario= ?";
     
