@@ -138,10 +138,10 @@ app.get("/usuarios", function(request, response)
 // Para registrarse
 app.post("/usuarios", function(request, response)
 {
-    let username =request.body.username;
-    let mail =request.body.mail;
-    let password= request.body.password;
-    let encryptpassword   = Encrypt(password);
+    let username        = request.body.username;
+    let mail            = request.body.mail;
+    let password        = request.body.password;
+    let encryptpassword = Encrypt(password);
 
     let params=[username, mail, encryptpassword]
 
@@ -172,14 +172,14 @@ app.put("/usuarios", function(request, response)
 {
     console.log(request.body);
     
-    let password= request.body.password;
-    let nombreCompleto= request.body.nombreCompleto;
-    let fechaNacimiento= request.body.fechaNacimiento;
-    let telefono= request.body.telefono;
-    let urlFoto= request.body.urlFoto;
-    let username = request.body.username;
-    let mail = request.body.mail
-    let encryptpassword   = Encrypt(password);
+    let password            = request.body.password;
+    let nombreCompleto      = request.body.nombreCompleto;
+    let fechaNacimiento     = request.body.fechaNacimiento;
+    let telefono            = request.body.telefono;
+    let urlFoto             = request.body.urlFoto;
+    let username            = request.body.username;
+    let mail                = request.body.mail
+    let encryptpassword     = Encrypt(password);
     
 
     let id = request.body.id_usuario
