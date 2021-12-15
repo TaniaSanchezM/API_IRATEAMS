@@ -4,7 +4,7 @@ const cors      = require('cors');
 const mysql     = require('mysql2');
 const crypto    = require('crypto');
 const jwt       = require('jsonwebtoken');
-
+const mailer    = require('./mailer.js')
 let port        = process.env.PORT || 3000;
 
 
@@ -161,6 +161,12 @@ app.post("/usuarios", function(request, response)
                 response.status(204).send(respuesta);
             } else {
                 respuesta = {error:false,msg:"Usuario creado", resultado:result}
+                mailer.welcomeMail(mail, (err, data) => {
+                    if (err) {
+                      return console.error(err);
+                    }
+                    console.log(data);
+                  });
                 response.status(200).send(respuesta);
             }
         }
