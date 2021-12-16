@@ -69,7 +69,7 @@ app.post('/login', (req, res) => {
                 msg:"El usuario o la contraseña no son correctos", 
                 resultado:results
             }
-            res.status(404).send(response);
+            res.status(204).send(response);
         }
           
     });
@@ -128,7 +128,7 @@ app.get("/usuarios", function(request, response)
         else{
             if (result.length == 0) {
                 respuesta = {error:false,msg:"Error al obtener usuario", resultado:result}
-                response.status(404).send(respuesta);
+                response.status(204).send(respuesta);
             } else {
                 respuesta = {error:false,msg:"Usuario", resultado:result}
                 response.status(200).send(respuesta);
@@ -160,7 +160,7 @@ app.post("/usuarios", function(request, response)
         else{
             if (result.length == 0) {
                 respuesta = {error:false,msg:"Error al crear el usuario", resultado:result}
-                response.status(404).send(respuesta);
+                response.status(204).send(respuesta);
             } else {
                 respuesta = {error:false,msg:"Usuario creado", resultado:result}
                 mailer.welcomeMail(mail, (err, data) => {
@@ -206,7 +206,7 @@ app.put("/usuarios", function(request, response)
         else{
             if (result.length == 0) {
                 respuesta = {error:false,msg:"Error al modificar los datos de usuario", resultado:result}
-                response.status(404).send(respuesta);
+                response.status(204).send(respuesta);
             } else {
                 respuesta = {error:false,msg:"Datos modificados", resultado:result}
                 response.status(200).send(respuesta);
@@ -233,7 +233,7 @@ app.delete("/usuarios", function(request,response)
         else{
             if (result.length == 0) {
                 respuesta = {error:false,msg:"Error al eliminar el usuario", resultado:result}
-                response.status(404).send(respuesta);
+                response.status(204).send(respuesta);
             } else {
                 respuesta = {error:false,msg:"Usuario eliminado", resultado:result}
                 response.status(200).send(respuesta);
@@ -260,7 +260,7 @@ app.get("/historial", function(request, response)
         else{
             if (result.length == 0) {
                 respuesta = {error:false,msg:"Error al obtener el historial", resultado:result}
-                response.status(404).send(respuesta);
+                response.status(204).send(respuesta);
             } else {
                 respuesta = {error:false,msg:"Historial obtenido", resultado:result}
                 response.status(200).send(respuesta);
@@ -288,7 +288,7 @@ app.get("/calendario", function(request, response)
         else{
             if (result.length == 0) {
                 respuesta = {error:false,msg:"Error al obtener p´roximos eventos", resultado:result}
-                response.status(404).send(respuesta);
+                response.status(204).send(respuesta);
             } else {
                 respuesta = {error:false,msg:"Próximos eventos", resultado:result}
                 response.status(200).send(respuesta);
@@ -315,7 +315,7 @@ app.get("/miscreados", function(request, response)
         else{
             if (result.length == 0) {
                 respuesta = {error:false,msg:"Error al obtener mis eventos creados", resultado:result}
-                response.status(404).send(respuesta);
+                response.status(204).send(respuesta);
             } else {
                 respuesta = {error:false,msg:"Mis eventos creados", resultado:result}
                 response.status(200).send(respuesta);
@@ -340,7 +340,7 @@ app.delete("/miscreados", function(request,response)
         else{
             if (result.length == 0) {
                 respuesta = {error:false,msg:"Error al eliminar el evento", resultado:result}
-                response.status(404).send(respuesta);
+                response.status(204).send(respuesta);
             } else {
                 respuesta = {error:false,msg:"Evento eliminado", resultado:result}
                 response.status(200).send(respuesta);
@@ -368,7 +368,7 @@ app.get("/guardados", function(request, response){
             else{
                 if (result.length == 0) {
                     respuesta = {error:false,msg:"Error al obtener guardados", resultado:result}
-                    response.status(404).send(respuesta);
+                    response.status(204).send(respuesta);
                 } else {
                     respuesta = {error:false,msg:"guardados obtenido", resultado:result}
                     response.status(200).send(respuesta);
@@ -394,7 +394,7 @@ app.get("/guardados", function(request, response){
           else{
               if (result.length == 0) {
                   respuesta = {error:false,msg:"Error al obtener guardados", resultado:result}
-                  response.status(404).send(respuesta);
+                  response.status(204).send(respuesta);
               } else {
                   respuesta = {error:false,msg:"post guardados", resultado:result}
                   response.status(200).send(respuesta);
@@ -418,7 +418,7 @@ app.get("/guardados", function(request, response){
           else{
               if (result.length == 0) {
                   respuesta = {error:false,msg:"Error al eliminar evento guardado", resultado:result}
-                  response.status(404).send(respuesta);
+                  response.status(204).send(respuesta);
               } else {
                   respuesta = {error:false,msg:"evento guardado eliminado", resultado:result}
                   response.status(200).send(respuesta);
@@ -482,7 +482,7 @@ app.get("/eventos", function (request, response)
 //         else{
 //             if (results.length == 0) {
 //                 respuesta = {error:false,msg:"No se han encontrado eventos", resultado:results}
-//                 response.status(404).send(respuesta);
+//                 response.status(204).send(respuesta);
 //             } else {
 //                 respuesta = {error:false, msg:"Se han encontrado eventos", resultado:results}
 //                 response.status(200).send(respuesta);
@@ -701,7 +701,7 @@ app.get("/filtroHome", function(request, response)
         else{
             if (result.length === 0) {
                 respuesta = {error:false,msg:"Error al obtener datos del filtro", resultado:result}
-                response.status(404).send(respuesta);
+                response.status(204).send(respuesta);
             } else {
                 respuesta = {error:false,msg:"filtro realizado", resultado:result}
                 response.status(200).send(respuesta);
@@ -726,7 +726,7 @@ app.get("/home", function(request, response){
             else{
                 if (result1.length == 0) {
                     respuesta = {error:false,msg:"No hay eventos", resultado1:result1}
-                    response.status(404).send(respuesta);
+                    response.status(204).send(respuesta);
                 } else {
                     let sql2 = "SELECT * FROM IRATEAMS.guardados WHERE id_usuario = ?"
                     connection.query(sql2,params,function(err, result2)
@@ -739,7 +739,7 @@ app.get("/home", function(request, response){
                         else{
                             if (result2.length == 0) {
                                 respuesta = {error:false,msg:"No hay eventos guardados", resultado:result1}
-                                response.status(404).send(respuesta);
+                                response.status(204).send(respuesta);
                             } else {
                                 result1.forEach((element1) =>
                                 {
@@ -782,7 +782,7 @@ app.get("/apuntados", function(request, response)
         else{
             if (result.length == 0) {
                 respuesta = {error:false,msg:"Error al obtener apuntados", resultado:result}
-                response.status(404).send(respuesta);
+                response.status(204).send(respuesta);
             } else {
                 respuesta = {error:false,msg:" get Apuntado/s", resultado:result}
                 response.status(200).send(respuesta);
@@ -1031,7 +1031,7 @@ app.post("/recPass", function(request, response)
         else{
             if (result.length == 0) {
                 respuesta = {error:false,msg:"El correo introducido no se encuentra en nuestro sistema", resultado:result}
-                response.status(404).send(respuesta);
+                response.status(204).send(respuesta);
             } else {
                respuesta = sendNewPassword(mail);
                response.status(200).send(respuesta)
