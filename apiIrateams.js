@@ -190,7 +190,7 @@ app.put("/usuarios", function(request, response)
     let encryptpassword     = Encrypt(password);
     
 
-    let id = request.body.id_evento
+    let id = request.body.id_usuario
 
     let params=[username,mail, encryptpassword, nombreCompleto, fechaNacimiento, telefono, urlFoto, id]
 
