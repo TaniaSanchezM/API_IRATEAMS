@@ -1005,12 +1005,8 @@ function sendNewPassword(mail){
                 if (err) {
                   return console.error(err);
                 }
-                console.log(data)
-                   
+                console.log(data)  
               });
-              respuesta = {error:false,msg:"Se ha enviado un correo con la contraseña", resultado:updateRes}
-              return respuesta;
-            
         }
     });
 }
@@ -1033,8 +1029,9 @@ app.post("/recPass", function(request, response)
                 respuesta = {error:false,msg:"El correo introducido no se encuentra en nuestro sistema", resultado:result}
                 response.status(200).send(respuesta);
             } else {
-               respuesta = sendNewPassword(mail);
-               response.status(200).send(respuesta)
+                sendNewPassword(mail);
+                respuesta = {error:false,msg:"Se ha enviado un correo con la contraseña"}
+                response.status(200).send(respuesta)
             }
         }
     });                  
