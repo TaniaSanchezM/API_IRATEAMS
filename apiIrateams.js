@@ -740,7 +740,7 @@ app.get("/home", function(request, response){
                                         element1.guardado = value
                                 })
                                 respuesta = {error:false,msg:"guardados obtenido", resultado:result1}
-                                response.status(200).send(result1);
+                                response.status(200).send(respuesta);
                             }
                         }
                     });
