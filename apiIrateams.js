@@ -757,39 +757,6 @@ app.get("/home", function(request, response){
         });
   })
 
-// ENDPOINTS APUNTADOS
-
-// GET apuntados
-// app.get("/apuntados", function(request, response)
-// {
-//     let id = request.query.id;
-//     let params =[id];
-//     let sql;
-//     if(request.query.id == null){
-//         sql = "SELECT * FROM IRATEAMS.apuntados"
-//     }
-//     else {
-//         sql = "SELECT * FROM IRATEAMS.apuntados WHERE id_evento=?" 
-//     }
-
-//     connection.query(sql, params, function(err, result)
-//     {
-//         if(err){
-//             console.error(err);
-//             respuesta = {error:true,msg:"Error al conectar con la base de datos", resultado:err};
-//             response.status(500).send(respuesta);
-//         }
-//         else{
-//             if (result.length == 0) {
-//                 respuesta = {error:false,msg:"Error al obtener apuntados", resultado:result}
-//                 response.status(204).send(respuesta);
-//             } else {
-//                 respuesta = {error:false,msg:" get Apuntado/s", resultado:result}
-//                 response.status(200).send(respuesta);
-//             }
-//         }
-//     });
-// });
 
 // POST APUNTARSE A EVENTO 
 
@@ -993,7 +960,80 @@ app.post("/apuntarme", function(request, response){
   })
 
 
+// ENDPOINTS APUNTADOS
 
+// GET apuntados
+// app.get("/apuntados", function(request, response)
+// {
+//     let id = request.query.id_evento;
+//     let params =[id];
+//     let sql;
+//     if(request.query.id == null){
+//         sql = "SELECT * FROM IRATEAMS.apuntados"
+//     }
+//     else {
+//         sql = "SELECT * FROM IRATEAMS.apuntados WHERE id_evento=?" 
+//     }
+
+//     connection.query(sql, params, function(err, result)
+//     {
+//         if(err){
+//             console.error(err);
+//             respuesta = {error:true,msg:"Error al conectar con la base de datos", resultado:err};
+//             response.status(500).send(respuesta);
+//         }
+//         else{
+//             if (result.length == 0) {
+//                 respuesta = {error:false,msg:"Error al obtener apuntados", resultado:result}
+//                 response.status(204).send(respuesta);
+//             } else {
+//                 respuesta = {error:false,msg:" get Apuntado/s", resultado:result}
+//                 response.status(200).send(respuesta);
+//             }
+//         }
+//     });
+// });
+
+// GET Apuntados 
+
+app.get("/apuntados", function(request, response)
+{
+    let id_evento = request.query.id_evento;
+    
+    let sql;
+    if(request.query.id_evento == null){
+        sql = "SELECT * FROM IRATEAMS.apuntados"
+    }
+    else {
+        url = "/apuntados?id="+request.query.id_evento
+        sql = "SELECT * FROM IRATEAMS.apuntados WHERE id_evento="+id_evento
+    }
+
+    connection.query(sql, function(err, result)
+    {
+        if(err){
+            console.error(err);
+            respuesta = {error:true,msg:"Error al conectar con la base de datos", resultado:err};
+            response.status(500).send(respuesta);
+        }
+        else{
+
+            console.log(result)
+            respuesta = {error:false,msg:" get Apuntado/s", resultado:result}
+            response.status(200).send(respuesta);
+
+            // if (result.length == 0) {
+            //     respuesta = {error:false,msg:"Error al obtener apuntados", resultado:result}
+            //     response.status(200).send(respuesta);
+            // } else {
+            //     console.log(result)
+            //     respuesta = {error:false,msg:" get Apuntado/s", resultado:result}
+            //     response.status(200).send(respuesta);
+            // }
+            
+        }
+    });
+});
 
 
 // POST apuntados
