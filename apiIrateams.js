@@ -248,7 +248,7 @@ app.get("/historial", function(request, response)
     let id = request.query.id;
     let params =[id];
 
-    let sql = "SELECT ev.id_evento, titulo, fecha, direccion, localidad FROM IRATEAMS.evento AS ev JOIN apuntados AS ap ON (ev.id_evento = ap.id_evento) JOIN usuario AS us ON (ap.id_usuario = us.id_usuario) WHERE us.id_usuario = ? AND  fecha < CURDATE();" 
+    let sql = "SELECT ev.id_evento, titulo, fecha, direccion, localidad FROM IRATEAMS.evento AS ev JOIN apuntados AS ap ON (ev.id_evento = ap.id_evento) JOIN usuario AS us ON (ap.id_usuario = us.id_usuario) WHERE us.id_usuario = ? AND  fecha < CURDATE() ORDER BY DATE_FORMAT(fecha, '%d-%m-%Y %T') ASC;" 
 
     connection.query(sql,params,function(err, result)
     {
@@ -276,7 +276,7 @@ app.get("/calendario", function(request, response)
     let id = request.query.id;
     let params =[id];
 
-    let sql = "SELECT ev.id_evento, titulo, fecha, direccion, localidad FROM IRATEAMS.evento AS ev JOIN apuntados AS ap ON (ev.id_evento = ap.id_evento) JOIN usuario AS us ON (ap.id_usuario = us.id_usuario) WHERE us.id_usuario = ? AND  fecha >= CURDATE();" 
+    let sql = "SELECT ev.id_evento, titulo, fecha, direccion, localidad FROM IRATEAMS.evento AS ev JOIN apuntados AS ap ON (ev.id_evento = ap.id_evento) JOIN usuario AS us ON (ap.id_usuario = us.id_usuario) WHERE us.id_usuario = ? AND  fecha >= CURDATE() ORDER BY DATE_FORMAT(fecha, '%d-%m-%Y %T') ASC" 
 
     connection.query(sql,params,function(err, result)
     {
@@ -287,7 +287,7 @@ app.get("/calendario", function(request, response)
         }
         else{
             if (result.length == 0) {
-                respuesta = {error:false,msg:"Error al obtener p´roximos eventos", resultado:result}
+                respuesta = {error:false,msg:"Error al obtener próximos eventos", resultado:result}
                 response.status(200).send(respuesta);
             } else {
                 respuesta = {error:false,msg:"Próximos eventos", resultado:result}
@@ -357,7 +357,7 @@ app.get("/guardados", function(request, response){
     let sql;
     let respuesta;
         console.log("get eventos guardados");
-        sql = "SELECT * FROM IRATEAMS.guardados WHERE id_usuario = ?"
+        sql = "SELECT * FROM IRATEAMS.guardados WHERE id_usuario = ? ORDER BY DATE_FORMAT(fecha, '%d-%m-%Y %T') ASC"
         connection.query(sql,params,function(err, result)
         {
             if(err){
@@ -743,9 +743,7 @@ app.get("/home", function(request, response){
                             } else {
                                 result1.forEach((element1) =>
                                 {
-                                    let value = result2.some((element2) => element1.id_evento == element2.id_evento )
-                                    if (value)
-                                        element1.guardado = value
+                                    element1.guardado = result2.some((element2) => element1.id_evento == element2.id_evento )
                                 })
                                 respuesta = {error:false,msg:"guardados obtenido", resultado:result1}
                                 response.status(200).send(respuesta);
