@@ -760,36 +760,241 @@ app.get("/home", function(request, response){
 // ENDPOINTS APUNTADOS
 
 // GET apuntados
-app.get("/apuntados", function(request, response)
-{
-    let id = request.query.id;
-    let params =[id];
-    let sql;
-    if(request.query.id == null){
-        sql = "SELECT * FROM IRATEAMS.apuntados"
-    }
-    else {
-        sql = "SELECT * FROM IRATEAMS.apuntados WHERE id_evento=?" 
-    }
+// app.get("/apuntados", function(request, response)
+// {
+//     let id = request.query.id;
+//     let params =[id];
+//     let sql;
+//     if(request.query.id == null){
+//         sql = "SELECT * FROM IRATEAMS.apuntados"
+//     }
+//     else {
+//         sql = "SELECT * FROM IRATEAMS.apuntados WHERE id_evento=?" 
+//     }
 
-    connection.query(sql, params, function(err, result)
+//     connection.query(sql, params, function(err, result)
+//     {
+//         if(err){
+//             console.error(err);
+//             respuesta = {error:true,msg:"Error al conectar con la base de datos", resultado:err};
+//             response.status(500).send(respuesta);
+//         }
+//         else{
+//             if (result.length == 0) {
+//                 respuesta = {error:false,msg:"Error al obtener apuntados", resultado:result}
+//                 response.status(204).send(respuesta);
+//             } else {
+//                 respuesta = {error:false,msg:" get Apuntado/s", resultado:result}
+//                 response.status(200).send(respuesta);
+//             }
+//         }
+//     });
+// });
+
+// POST APUNTARSE A EVENTO 
+
+
+app.post("/apuntarme", function(request, response){
+
+    // post apuntado, get nPersSolicitadas Evento, Put Evento (nPErsSOlicitadas -1)
+    console.log("Entra al post")
+
+    let respuesta;
+    console.log(request.body)
+
+    let id_usuario= request.body.id_usuario;
+    let id_evento= request.body.id_evento;
+
+    let params = [id_usuario, id_evento]
+
+    let sql = `INSERT INTO IRATEAMS.apuntados(id_usuario, id_evento) VALUES(?, ?)`
+    // let sql = `SELECT nPersSolicitadas, id_evento FROM IRATEAMS.evento WHERE fecha >= CURDATE() ORDER BY DATE_FORMAT(fecha, '%d-%m-%Y %T') ASC`
+
+    connection.query(sql, params, function(err, result1)
     {
-        if(err){
+        if(err)
+        {
             console.error(err);
             respuesta = {error:true,msg:"Error al conectar con la base de datos", resultado:err};
             response.status(500).send(respuesta);
         }
         else{
-            if (result.length == 0) {
-                respuesta = {error:false,msg:"Error al obtener apuntados", resultado:result}
-                response.status(200).send(respuesta);
-            } else {
-                respuesta = {error:false,msg:" get Apuntado/s", resultado:result}
-                response.status(200).send(respuesta);
-            }
+            // if (result.length == 0) {
+            //     respuesta = {error:false,msg:"Error al obtener apuntados", resultado:result}
+            //     response.status(200).send(respuesta);
+            // } else {
+            //     respuesta = {error:false,msg:" get Apuntado/s", resultado:result}
+            //     response.status(200).send(respuesta);
+            // }
+            // console.log(result1)
+            respuesta = {error:false, msg:"get npersSolicitatdas New apuntado", resultado:result1}
+            response.status(200).send(respuesta);
+
+            console.log("get PersSolicitadas Evento");
+            let id2 = id_usuario;
+           
+            sql2 = "SELECT nPersSolicitadas, id_creador FROM IRATEAMS.evento  WHERE id_evento ="+id2
+
+            connection.query(sql2, function(err, result2)
+            {
+                if(err)
+                {
+                    console.error(err);
+                    respuesta = {error:true,msg:"Error get nPersSolicitadas Evento", resultado:err};
+                    response.status(500).send(respuesta);
+                }
+                else{
+                    console.log(result1)
+                    respuesta = {error:false, msg:"Get nPersSolicitadas evento", resultado:result2}
+                    response.status(200).send(respuesta);
+
+                    console.log("Entra put nPersSolicitadas (n-1) evento");
+                    console.log(result2);
+                    
+            //         let nPersSolicitadas = result2.nPersSolicitadas-1
+                    
+            //         let params = [ nPersSolicitadas ]
+                    
+            //         let sql3 = "UPDATE evento SET  nPersSolicitadas = ? WHERE id_evento="+id_evento
+                          
+            //         connection.query(sql3, params, function(err,result3){
+                
+            //             if(err)
+            //             {
+            //                 console.error(err);
+            //                 respuesta = {error:true,msg:"Error en put nPersSolicitadas Evento -1", resultado:err};
+            //                 response.status(500).send(respuesta);
+            //             }
+            //             else{
+                                
+            //                 console.log(result)
+            //                 respuesta = {error:false, msg:"Evento modificado", resultado:result3}
+            //                 response.status(200).send(respuesta);
+                            
+        //                     console.log("entra a POST crear chat usuario-creador evento")
+
+                            
+        //                     sql4 = `SELECT * FROM IRATEAMS.chat WHERE (id_user1 = ${id_usuario} AND id_user2 = ${result2.id_creador}) OR (id_user2 = ${result2.id_creador} AND id_user1 = ${id_usuario})`;
+        
+        //                     connection.query(sql4, function (err, result4) {
+        //                         if (err) {
+
+        //                             console.log(err);
+        //                             respuesta = { err: true, msg: "Error al Post crear chat usuario-creador", resultado: err }
+        //                             response.status(500).send(respuesta);
+
+        //                         } else {
+        //                             if (result4 == "") {
+        //                                 sql5 = `INSERT INTO IRATEAMS.chat (id_user1, id_user2)
+        //                                         VALUES ('${id_usuario}', '${result2.id_creador}')`;
+
+        //                                 connection.query(sql5, function (err, result5) {
+        //                                     if (err) {
+        //                                         console.log(err);
+        //                                         respuesta = { err: true, msg: "Error get chat usuario - creador evento", resultado: err }
+        //                                         response.status(500).send(respuesta);
+        //                                     } else {
+        //                                         respuesta = {error:false, msg:"Chat usuario - creador Evento creado correctamente", resultado:result5}
+        //                                         let id_chat = result5.id_chat
+        //                                         response.status(200).send(respuesta);
+        //                                     }
+        //                                 })
+        //                             } else if (result4 != "") {
+        //                                 respuesta = {error:false, msg:"El chat  usuario - creador Evento ya está creado", resultado:result4}
+        //                                 let id_chat = result4[0].id_chat
+        //                                 response.status(200).send(respuesta);
+        //                             }
+                                    
+        //                             let mensaje = "Se ha añadido a tu evento"
+        //                             let fecha = Date.now()
+
+        //                             // let params = [
+        //                             //     id_chat,
+        //                             //     id_usuario,
+        //                             //     mensaje,
+        //                             //     fecha
+        //                             // ]
+                                    
+
+        //                             sql6 = `INSERT INTO mensajes (id_chat, id_emisor, mensaje, fecha)
+        //                             VALUES ('${id_chat}', '${id_usuario}', '${mensaje}', '${fecha}')`;
+                                
+        //                                 connection.query(sql6, function (err, result6) {
+        //                                     if (err) {
+        //                                         console.log(err);
+        //                                         respuesta = { err: true, msg: "Error al mandar mensaje/notificacion de unirse", resultado: err }
+        //                                         response.status(500).send(respuesta);
+        //                                     } else {
+        //                                         respuesta = { error: false, msg: "Mensaje confirmacion apuntado a tu evento creado", resultado: result }
+        //                                         response.status(200).send(respuesta);
+        //                                     }
+        //                                 })
+
+
+
+
+        //                         }
+        //                     })
+
+                        
+    //                     }
+    //                 })
+    //                 console.log("salida put evento")
+                
+                }
+            })
         }
-    });
-});
+    })
+    console.log("salida post apuntados")
+
+
+    // let id_usuario = request.query.id_usuario;
+    // let params = [id_usuario]
+    // let sql = "SELECT * FROM IRATEAMS.evento WHERE fecha >= CURDATE() ORDER BY DATE_FORMAT(fecha, '%d-%m-%Y %T') ASC"
+    // connection.query(sql,params,function(err, result1)
+    //     {
+    //         if(err){
+    //             console.error(err);
+    //             respuesta = {error:true,msg:"Error al conectar con la base de datos", resultado:err};
+    //             response.status(500).send(respuesta);
+    //         }
+    //         else{
+    //             if (result1.length == 0) {
+    //                 respuesta = {error:false,msg:"No hay eventos", resultado1:result1}
+    //                 response.status(404).send(respuesta);
+    //             } else {
+    //                 let sql2 = "SELECT * FROM IRATEAMS.guardados WHERE id_usuario = ?"
+    //                 connection.query(sql2,params,function(err, result2)
+    //                 {
+    //                     if(err){
+    //                         console.error(err);
+    //                         respuesta = {error:true,msg:"Error get guardados", resultado:err};
+    //                         response.status(500).send(respuesta);
+    //                     }
+    //                     else{
+    //                         if (result2.length == 0) {
+    //                             respuesta = {error:false,msg:"No hay eventos guardados", resultado:result1}
+    //                             response.status(404).send(respuesta);
+    //                         } else {
+    //                             result1.forEach((element1) =>
+    //                             {
+    //                                 let value = result2.some((element2) => element1.id_evento == element2.id_evento )
+    //                                 if (value)
+    //                                     element1.guardado = value
+    //                             })
+    //                             respuesta = {error:false,msg:"guardados obtenido", resultado:result1}
+    //                             response.status(200).send(respuesta);
+    //                         }
+    //                     }
+    //                 });
+    //             }
+    //         }
+    //     });
+  })
+
+
+
+
 
 // POST apuntados
 
@@ -890,9 +1095,11 @@ app.get("/chats",
         })
     })
 
-app.post("/chat",
+app.post("/chats",
     function (request, response) {
-        sql = `SELECT * FROM IRATEAMS.chat WHERE (id_user1 = ${request.body.id1} AND id_user2 = ${request.body.id2}) OR (id_user2 = ${request.body.id2} AND id_user1 = ${request.body.id1})`;
+        
+
+        sql = `SELECT * FROM IRATEAMS.chat WHERE (id_user1 = ${request.body.id_user1} AND id_user2 = ${request.body.id_user2}) OR (id_user2 = ${request.body.id_user2} AND id_user1 = ${request.body.id_user1})`;
         
         connection.query(sql, function (err, result) {
             if (err) {
@@ -901,6 +1108,7 @@ app.post("/chat",
                 response.status(500).send(respuesta);
             } else {
                 if (result == "") {
+                    
                     sql = `INSERT INTO IRATEAMS.chat (id_user1, id_user2)
                 VALUES ('${request.body.id_user1}', '${request.body.id_user2}')`;
 
@@ -922,7 +1130,7 @@ app.post("/chat",
         })
     })
 
-app.delete("/chat",
+app.delete("/chats",
     function (request, response) {
         sql = `DELETE FROM chat WHERE id_chat=${request.body.id}`
         connection.query(sql, function (err, result) {
