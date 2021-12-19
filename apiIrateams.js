@@ -657,39 +657,26 @@ app.delete("/eventos", function(request, response)
 
 app.get("/filtroHome", function(request, response)
 {  
-    let where = ""
-    let filtro1 = request.query.filtro1
-    let filtro2 = request.query.filtro2
-    let filtro3 = request.query.filtro3
-    let params = []
+    let where = "WHERE fecha >= CURDATE() AND (deporte = ? OR localidad = ?)"
+    let orderBy =`ORDER BY DATE_FORMAT(fecha, '%d-%m-%Y %T') ASC`
+    let filtro = request.query.filtro1
+    // let filtro2 = request.query.filtro2
+    // let filtro3 = request.query.filtro3
+    let params = [filtro, filtro]
     
-    
-    if (filtro1 != ""&& filtro1 != null){
-        if(where === ""){
-            where = " WHERE deporte =  ?"
-        } else{
-            where = ""
-        }
-            // console.log(filtro1)
-        params.push(filtro1);
-    }
-    if (filtro2 != "" && filtro2 != null){
-        if (where === ""){
-            where = " WHERE fecha = ?"
-        } else {
-            where += " AND fecha = ?"
-        }
-        params.push(filtro2)
-    }
-    if (filtro3 != "" && filtro3 != null){
-        if (where === ""){
-            where = " WHERE localidad = ?"
-        } else {
-            where += " AND localidad = ?"
-        }
-        params.push(filtro3)
-    }
-    let sql = "SELECT * FROM IRATEAMS.evento" + where 
+    // if (filtro1 != ""&& filtro1 != null){
+    //         where = " AND deporte =  ?"
+    //         params.push(filtro1);        
+    // }
+    // if (filtro2 != "" && filtro2 != null){
+    //     where += " AND fecha = ?"
+    //     params.push(filtro2)
+    // }
+    // if (filtro3 != "" && filtro3 != null){
+    //         where += " AND localidad = ?"
+    //     params.push(filtro3)
+    // }
+    let sql = "SELECT * FROM IRATEAMS.evento" + where + orderBy;
 
     connection.query(sql, params, function(err, result)
     {
