@@ -1283,4 +1283,16 @@ app.post("/recPass", function(request, response)
     });                  
 });
 
+app.post('/soporte', function(request,response) {
+    const mail = request.body.mail;
+    const question = request.body.question;
+
+    mailer.supportTicket(mail,question, (err,data)=>{
+        if (err){
+            response.status(200).send({error:true,msg:'Error al crear la solicitud de soporte'})
+        } else {
+            response.status(200).send({error:false,msg:'Se ha creado una solicitud de soporte'})
+        }
+    }); 
+});
 app.listen(port)
