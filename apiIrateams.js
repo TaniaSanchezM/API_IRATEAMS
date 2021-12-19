@@ -676,7 +676,7 @@ app.get("/filtroHome", function(request, response)
     //         where += " AND localidad = ?"
     //     params.push(filtro3)
     // }
-    let sql = "SELECT * FROM IRATEAMS.evento" + where + orderBy;
+    let sql = "SELECT * FROM IRATEAMS.evento WHERE fecha >= CURDATE() AND (deporte = ? OR localidad = ?) ORDER BY DATE_FORMAT(fecha, '%d-%m-%Y %T') ASC";
 
     connection.query(sql, params, function(err, result)
     {
