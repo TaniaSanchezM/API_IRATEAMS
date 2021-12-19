@@ -999,6 +999,7 @@ app.post("/apuntarme", function(request, response){
 app.get("/apuntados", function(request, response)
 {
     let id_evento = request.query.id_evento;
+    let arrayApuntados = []
     
     let sql;
     if(request.query.id_evento == null){
@@ -1019,7 +1020,12 @@ app.get("/apuntados", function(request, response)
         else{
 
             console.log(result)
-            respuesta = {error:false,msg:" get Apuntado/s", resultado:result}
+            for(let i = 0; i < result.length; i++)
+            {
+                arrayApuntados.push(result[i].id_usuario)
+            }
+            console.log(arrayApuntados)
+            respuesta = {error:false,msg:" get Apuntado/s", resultado:arrayApuntados}
             response.status(200).send(respuesta);
 
             // if (result.length == 0) {
@@ -1034,6 +1040,7 @@ app.get("/apuntados", function(request, response)
         }
     });
 });
+
 
 
 // POST apuntados
