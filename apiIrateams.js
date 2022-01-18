@@ -715,7 +715,7 @@ app.get("/filtroHome", function(request, response)
 app.get("/home", function(request, response){
     let id_usuario = request.query.id_usuario;
     let params = [id_usuario]
-    let sql = "SELECT * FROM IRATEAMS.evento WHERE fecha >= CURDATE() ORDER BY DATE_FORMAT(fecha, '%d-%m-%Y %T') ASC"
+    let sql = "SELECT * FROM IRATEAMS.evento WHERE fecha >= CURDATE() ORDER BY DATE_FORMAT(fecha, '%Y-%m-%d %T') ASC"
     connection.query(sql,params,function(err, result1)
         {
             if(err){
