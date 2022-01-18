@@ -441,7 +441,7 @@ app.get("/eventos", function (request, response)
     if(id == null)
     {
         console.log("get eventos");
-        sql = "SELECT * FROM IRATEAMS.evento WHERE fecha >= CURDATE() ORDER BY DATE_FORMAT(fecha, '%d-%m-%Y %T') ASC"
+        sql = "SELECT * FROM IRATEAMS.evento WHERE fecha >= CURDATE() ORDER BY DATE_FORMAT(fecha, '%Y-%m-%d %T') ASC"
         
     }else
     {
