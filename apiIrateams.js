@@ -248,7 +248,7 @@ app.get("/historial", function(request, response)
     let id = request.query.id;
     let params =[id];
 
-    let sql = "SELECT ev.id_evento, titulo, fecha, direccion, localidad FROM IRATEAMS.evento AS ev JOIN apuntados AS ap ON (ev.id_evento = ap.id_evento) JOIN usuario AS us ON (ap.id_usuario = us.id_usuario) WHERE us.id_usuario = ? AND  fecha < CURDATE() ORDER BY DATE_FORMAT(fecha, '%d-%m-%Y %T') ASC;" 
+    let sql = "SELECT ev.id_evento, titulo, fecha, direccion, localidad FROM IRATEAMS.evento AS ev JOIN apuntados AS ap ON (ev.id_evento = ap.id_evento) JOIN usuario AS us ON (ap.id_usuario = us.id_usuario) WHERE us.id_usuario = ? AND  fecha < CURDATE() ORDER BY DATE_FORMAT(fecha, '%Y-%m-%d %T') ASC;" 
 
     connection.query(sql,params,function(err, result)
     {
@@ -276,7 +276,7 @@ app.get("/calendario", function(request, response)
     let id = request.query.id;
     let params =[id];
 
-    let sql = "SELECT ev.id_evento, titulo, fecha, direccion, localidad FROM IRATEAMS.evento AS ev JOIN apuntados AS ap ON (ev.id_evento = ap.id_evento) JOIN usuario AS us ON (ap.id_usuario = us.id_usuario) WHERE us.id_usuario = ? AND  fecha >= CURDATE() ORDER BY DATE_FORMAT(fecha, '%d-%m-%Y %T') ASC" 
+    let sql = "SELECT ev.id_evento, titulo, fecha, direccion, localidad FROM IRATEAMS.evento AS ev JOIN apuntados AS ap ON (ev.id_evento = ap.id_evento) JOIN usuario AS us ON (ap.id_usuario = us.id_usuario) WHERE us.id_usuario = ? AND  fecha >= CURDATE() ORDER BY DATE_FORMAT(fecha, '%Y-%m-%d %T') ASC" 
 
     connection.query(sql,params,function(err, result)
     {
@@ -303,7 +303,7 @@ app.get("/miscreados", function(request, response)
     let id = request.query.id;
     let params =[id];
 
-    let sql =  "SELECT * FROM IRATEAMS.evento AS ev JOIN IRATEAMS.usuario AS us ON (ev.id_creador = us.id_usuario) WHERE us.id_usuario = ?"
+    let sql =  "SELECT * FROM IRATEAMS.evento AS ev JOIN IRATEAMS.usuario AS us ON (ev.id_creador = us.id_usuario) WHERE us.id_usuario = ? ORDER BY DATE_FORMAT(fecha, '%Y-%m-%d %T') ASC"
 
     connection.query(sql,params,function(err, result)
     {
@@ -357,7 +357,7 @@ app.get("/guardados", function(request, response){
     let sql;
     let respuesta;
         console.log("get eventos guardados");
-        sql = "SELECT * FROM IRATEAMS.guardados WHERE id_usuario = ? ORDER BY DATE_FORMAT(fecha, '%d-%m-%Y %T') ASC"
+        sql = "SELECT * FROM IRATEAMS.guardados WHERE id_usuario = ? ORDER BY DATE_FORMAT(fecha, '%Y-%m-%d %T') ASC"
         connection.query(sql,params,function(err, result)
         {
             if(err){
