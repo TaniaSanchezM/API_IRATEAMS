@@ -248,7 +248,7 @@ app.get("/historial", function(request, response)
     let id = request.query.id;
     let params =[id];
 
-    let sql = "SELECT ev.id_evento, titulo, fecha, direccion, localidad FROM IRATEAMS.evento AS ev JOIN apuntados AS ap ON (ev.id_evento = ap.id_evento) JOIN usuario AS us ON (ap.id_usuario = us.id_usuario) WHERE us.id_usuario = ? AND  fecha < CURDATE() ORDER BY DATE_FORMAT(fecha, '%Y-%m-%d %T') ASC;" 
+    let sql = "SELECT ev.id_evento, titulo, fecha, direccion, localidad FROM IRATEAMS.evento AS ev JOIN apuntados AS ap ON (ev.id_evento = ap.id_evento) JOIN usuario AS us ON (ap.id_usuario = us.id_usuario) WHERE us.id_usuario = ? AND  fecha < CURDATE() ORDER BY DATE_FORMAT(fecha, '%Y-%m-%d %T') DESC;" 
 
     connection.query(sql,params,function(err, result)
     {
@@ -658,7 +658,7 @@ app.delete("/eventos", function(request, response)
 app.get("/filtroHome", function(request, response)
 {  
     let where = "WHERE fecha >= CURDATE()"
-    let orderBy =`ORDER BY DATE_FORMAT(fecha, '%d-%m-%Y %T') ASC`
+    let orderBy =`ORDER BY DATE_FORMAT(fecha, '%Y-%m-%d %T') ASC`
     let filtro = request.query.filtro1
     // let filtro2 = request.query.filtro2
     // let filtro3 = request.query.filtro3
